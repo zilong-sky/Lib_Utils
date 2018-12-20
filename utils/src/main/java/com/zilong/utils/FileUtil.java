@@ -52,18 +52,18 @@ public class FileUtil {
     //**********************  手机缓存相关操作 ****************************************//
 
     //清除所有文件(缓存,files)
-    public static void clearAll(Context context) {
-        clearAllCache(context);
-        clearAllFiles(context);
+    public static void clearAll() {
+        clearAllCache();
+        clearAllFiles();
     }
 
     //获取全部缓存大小(手机的和sd卡的)
-    public static String getTotalCacheSize(Context context) {
+    public static String getTotalCacheSize() {
         long cacheSize;
         try {
-            cacheSize = getFolderSize(context.getCacheDir());
+            cacheSize = getFolderSize(LibUtils.getContext().getCacheDir());
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                cacheSize += getFolderSize(context.getExternalCacheDir());
+                cacheSize += getFolderSize(LibUtils.getContext().getExternalCacheDir());
             }
             return getFormatSize(cacheSize);
         } catch (Exception e) {
@@ -73,23 +73,23 @@ public class FileUtil {
     }
 
     //清除所有缓存(手机和SD卡)
-    public static void clearAllCache(Context context) {
-        deleteDir(context.getCacheDir());
+    public static void clearAllCache() {
+        deleteDir(LibUtils.getContext().getCacheDir());
         if (isSDCardAvailable()) {
-            deleteDir(context.getExternalCacheDir());
+            deleteDir(LibUtils.getContext().getExternalCacheDir());
         }
     }
 
 
     //获取全部长久保存的随应用卸载的files大小(手机和sd卡)
-    public static String getTotalFilesSize(Context context) {
+    public static String getTotalFilesSize() {
         long cacheSize;
         try {
-            cacheSize = getFolderSize(context.getFilesDir());
+            cacheSize = getFolderSize(LibUtils.getContext().getFilesDir());
             if (isSDCardAvailable()) {
-                cacheSize += getFolderSize(getDownloadAppDir(context));
-                cacheSize += getFolderSize(getPictureAppDir(context));
-                cacheSize += getFolderSize(getDocumentsAppDir(context));
+                cacheSize += getFolderSize(getDownloadAppDir());
+                cacheSize += getFolderSize(getPictureAppDir());
+                cacheSize += getFolderSize(getDocumentsAppDir());
             }
             return getFormatSize(cacheSize);
         } catch (Exception e) {
@@ -99,12 +99,12 @@ public class FileUtil {
     }
 
     //清除所有长久保存的随应用卸载的files(手机和sd卡)
-    public static void clearAllFiles(Context context) {
-        deleteDir(context.getFilesDir());
+    public static void clearAllFiles() {
+        deleteDir(LibUtils.getContext().getFilesDir());
         if (isSDCardAvailable()) {
-            deleteDir(getDownloadAppDir(context));
-            deleteDir(getPictureAppDir(context));
-            deleteDir(getDocumentsAppDir(context));
+            deleteDir(getDownloadAppDir());
+            deleteDir(getPictureAppDir());
+            deleteDir(getDocumentsAppDir());
         }
     }
 
@@ -196,83 +196,83 @@ public class FileUtil {
     //************************  随应用卸载  文件夹  ******************************//
     //获取临时缓存文件目录,缓存,没必要再区分那么详细了/Android/data
     //判断是否存在SD卡(root后可见/data/data)
-    public static File getCacheDir(Context context) {
+    public static File getCacheDir() {
         if (isSDCardAvailable()) {
-            return context.getExternalCacheDir();
+            return LibUtils.getContext().getExternalCacheDir();
         } else {
-            return context.getCacheDir();
+            return LibUtils.getContext().getCacheDir();
         }
     }
 
     //                   --------缓存  (需要什么缓存文件夹,依此类推写出方法就行,)-------     //
     //获取okhttp网络缓存目录
-    public static File getHttpCacheDir(Context context) {
+    public static File getHttpCacheDir() {
         if (isSDCardAvailable()) {
-            String path = context.getExternalCacheDir() + File.separator + "okhttp";
+            String path = LibUtils.getContext().getExternalCacheDir() + File.separator + "okhttp";
             if (createDirs(path)) {
                 return new File(path);
             } else {
-                return context.getCacheDir();
+                return LibUtils.getContext().getCacheDir();
             }
         } else {
-            return context.getCacheDir();
+            return LibUtils.getContext().getCacheDir();
         }
     }
 
     //获取错误日志保存目录
-    public static File getCrashCacheDir(Context context) {
+    public static File getCrashCacheDir() {
         if (isSDCardAvailable()) {
-            String path = context.getExternalCacheDir() + File.separator + "crash";
+            String path = LibUtils.getContext().getExternalCacheDir() + File.separator + "crash";
             if (createDirs(path)) {
                 return new File(path);
             } else {
-                return context.getCacheDir();
+                return LibUtils.getContext().getCacheDir();
             }
         } else {
-            return context.getCacheDir();
+            return LibUtils.getContext().getCacheDir();
         }
     }
 
     //获取图片缓存目录
-    public static File getImageCacheDir(Context context) {
+    public static File getImageCacheDir() {
         if (isSDCardAvailable()) {
-            String path = context.getExternalCacheDir() + File.separator + "image";
+            String path = LibUtils.getContext().getExternalCacheDir() + File.separator + "image";
             if (createDirs(path)) {
                 return new File(path);
             } else {
-                return context.getCacheDir();
+                return LibUtils.getContext().getCacheDir();
             }
         } else {
-            return context.getCacheDir();
+            return LibUtils.getContext().getCacheDir();
         }
     }
 
 
     //                -----   长久保存file-------//
     //获取下载目录
-    public static File getDownloadAppDir(Context context) {
-        return getAppDir(context,Environment.DIRECTORY_DOWNLOADS);
+    public static File getDownloadAppDir() {
+        return getAppDir(Environment.DIRECTORY_DOWNLOADS);
     }
 
 
     //获取文档目录
-    public static File getDocumentsAppDir(Context context) {
-        return getAppDir(context,Environment.DIRECTORY_DOCUMENTS);
+    public static File getDocumentsAppDir() {
+        return getAppDir(Environment.DIRECTORY_DOCUMENTS);
     }
 
 
     //获取picture目录
-    public static File getPictureAppDir(Context context) {
-        return getAppDir(context,Environment.DIRECTORY_PICTURES);
+    public static File getPictureAppDir() {
+        return getAppDir(Environment.DIRECTORY_PICTURES);
     }
 
     //获取随app而生的目录，当SD卡存在时，获取SD卡上的file目录/Android/data
     //当SD卡不存在时，获取本地的file目录(root后可见/data/data)
-    private static File getAppDir(Context context,String type) {
+    private static File getAppDir(String type) {
         if (isSDCardAvailable()) {
-            return context.getExternalFilesDir(type);
+            return LibUtils.getContext().getExternalFilesDir(type);
         } else {
-            return context.getFilesDir();
+            return LibUtils.getContext().getFilesDir();
         }
 
     }

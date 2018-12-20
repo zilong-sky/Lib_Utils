@@ -1,6 +1,5 @@
 package com.zilong.utils;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +13,6 @@ import android.webkit.WebView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.URL;
 
 public class BitmapUtil {
 
@@ -127,16 +125,16 @@ public class BitmapUtil {
      * @param isCover  如果文件存在,是否覆盖
      * @return 文件路径
      */
-    public static String saveBitmapToAppDir(Context context,Bitmap bitmap, String fileName, boolean isCover) {
+    public static String saveBitmapToAppDir(Bitmap bitmap, String fileName, boolean isCover) {
         File f = null;
         try {
-            f = new File(FileUtil.getPictureAppDir(context), fileName);
+            f = new File(FileUtil.getPictureAppDir(LibUtils.getContext()), fileName);
             if (f.exists() && !isCover) {
-                Log.e("BitmapUtil",f.getName() + "已经存在");
+                Log.e("BitmapUtil", f.getName() + "已经存在");
                 return f.getAbsolutePath();
             } else {
                 if (!f.exists() && !f.createNewFile()) {
-                   Log.e("BitmapUtil",fileName + "创建失败!");
+                    Log.e("BitmapUtil", fileName + "创建失败!");
                 } else {
                     //将bitmap质量压缩,
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -178,16 +176,16 @@ public class BitmapUtil {
      * @param isCover  如果文件存在,是否覆盖
      * @return 文件路径
      */
-    public static String saveBitmapToAppDirByPng(Context context,Bitmap bitmap, String fileName, boolean isCover) {
+    public static String saveBitmapToAppDirByPng(Bitmap bitmap, String fileName, boolean isCover) {
         File f = null;
         try {
-            f = new File(FileUtil.getPictureAppDir(context), fileName);
+            f = new File(FileUtil.getPictureAppDir(LibUtils.getContext()), fileName);
             if (f.exists() && !isCover) {
-               Log.e("BitmapUtil",f.getName() + "已经存在");
+                Log.e("BitmapUtil", f.getName() + "已经存在");
                 return f.getAbsolutePath();
             } else {
                 if (!f.exists() && !f.createNewFile()) {
-                   Log.e("BitmapUtil",fileName + "创建失败!");
+                    Log.e("BitmapUtil", fileName + "创建失败!");
                 } else {
                     //将bitmap质量压缩,
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -220,8 +218,8 @@ public class BitmapUtil {
     }
 
 
-    public static String saveBitmapToPhoneDir(Context context, String src, String fileName) {
-        return saveBitmapToPhoneDir(context, BitmapFactory.decodeFile(src), fileName);
+    public static String saveBitmapToPhoneDir(String src, String fileName) {
+        return saveBitmapToPhoneDir(BitmapFactory.decodeFile(src), fileName);
     }
 
     /**
@@ -229,7 +227,7 @@ public class BitmapUtil {
      *
      * @param bitmap
      */
-    public static String saveBitmapToPhoneDir(Context context, Bitmap bitmap, String fileName) {
+    public static String saveBitmapToPhoneDir(Bitmap bitmap, String fileName) {
         File f = null;
         try {
             f = new File(FileUtil.getPicturePhoneDir(), System.currentTimeMillis() + fileName);
@@ -257,7 +255,7 @@ public class BitmapUtil {
             e.printStackTrace();
         }
         if (f != null) {
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + f.getAbsolutePath())));
+            LibUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + f.getAbsolutePath())));
             return f.getAbsolutePath();
         } else {
             return null;
@@ -276,7 +274,7 @@ public class BitmapUtil {
 
         if (topBitmap == null || topBitmap.isRecycled()
                 || bottomBitmap == null || bottomBitmap.isRecycled()) {
-           Log.e("BitmapUtil","topBitmap=" + topBitmap + ";bottomBitmap=" + bottomBitmap);
+            Log.e("BitmapUtil", "topBitmap=" + topBitmap + ";bottomBitmap=" + bottomBitmap);
             return null;
         }
         int width = 0;
@@ -322,7 +320,7 @@ public class BitmapUtil {
 
         if (leftBitmap == null || leftBitmap.isRecycled()
                 || rightBitmap == null || rightBitmap.isRecycled()) {
-           Log.e("BitmapUtil","leftBitmap=" + leftBitmap + ";rightBitmap=" + rightBitmap);
+            Log.e("BitmapUtil", "leftBitmap=" + leftBitmap + ";rightBitmap=" + rightBitmap);
             return null;
         }
         int height = 0; // 拼接后的高度，按照参数取大或取小
@@ -368,24 +366,24 @@ public class BitmapUtil {
      * @param frontBitmap 盖在上面的位图
      * @return
      */
-    public static Bitmap mergeBitmap(Context context,Bitmap backBitmap, Bitmap frontBitmap, Bitmap bitmap2) {
+    public static Bitmap mergeBitmap(Bitmap backBitmap, Bitmap frontBitmap, Bitmap bitmap2) {
 
         if (backBitmap == null || backBitmap.isRecycled()
                 || frontBitmap == null || frontBitmap.isRecycled()) {
-           Log.e("BitmapUtil","backBitmap=" + backBitmap + ";frontBitmap=" + frontBitmap);
+            Log.e("BitmapUtil", "backBitmap=" + backBitmap + ";frontBitmap=" + frontBitmap);
             return null;
         }
         Bitmap bitmap = backBitmap.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(bitmap);
         //根据需要,调整位置
-        Rect baseRect = new Rect(0, backBitmap.getHeight() - frontBitmap.getHeight() * 5 + DensityUtil.dip2px(context,100), backBitmap.getWidth(), backBitmap.getHeight() - frontBitmap.getHeight() * 4 + DensityUtil.dip2px(context,100));
+        Rect baseRect = new Rect(0, backBitmap.getHeight() - frontBitmap.getHeight() * 5 + DensityUtil.dip2px(LibUtils.getContext(), 100), backBitmap.getWidth(), backBitmap.getHeight() - frontBitmap.getHeight() * 4 + DensityUtil.dip2px(LibUtils.getContext(), 100));
 
         Rect frontRect = new Rect(0, 0, frontBitmap.getWidth(), frontBitmap.getHeight());
         canvas.drawBitmap(frontBitmap, frontRect, baseRect, null);
 
 
         //根据需要,调整位置
-        Rect baseRect2 = new Rect(backBitmap.getWidth() - DensityUtil.dip2px(context,172), DensityUtil.dip2px(context,258), backBitmap.getWidth() - DensityUtil.dip2px(context,52), DensityUtil.dip2px(context,258) + bitmap2.getHeight());
+        Rect baseRect2 = new Rect(backBitmap.getWidth() - DensityUtil.dip2px(LibUtils.getContext(), 172), DensityUtil.dip2px(LibUtils.getContext(), 258), backBitmap.getWidth() - DensityUtil.dip2px(LibUtils.getContext(), 52), DensityUtil.dip2px(LibUtils.getContext(), 258) + bitmap2.getHeight());
 
         Rect frontRect2 = new Rect(0, 0, bitmap2.getWidth(), bitmap2.getHeight());
         canvas.drawBitmap(bitmap2, frontRect2, baseRect2, null);

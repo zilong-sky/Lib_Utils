@@ -48,15 +48,15 @@ public class CommonUtil {
      *
      * @return true---&gt;在前端,false---&gt;不在前端
      */
-    public static boolean isApplicationShowing(Context context) {
+    public static boolean isApplicationShowing() {
         boolean result = false;
-        android.app.ActivityManager am = (android.app.ActivityManager) context.getApplicationContext()
+        android.app.ActivityManager am = (android.app.ActivityManager) LibUtils.getContext()
                 .getSystemService(Context.ACTIVITY_SERVICE);
         if (am != null) {
             List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
             if (appProcesses != null) {
                 for (android.app.ActivityManager.RunningAppProcessInfo runningAppProcessInfo : appProcesses) {
-                    if (runningAppProcessInfo.processName.equals(context.getPackageName())) {
+                    if (runningAppProcessInfo.processName.equals(LibUtils.getContext().getPackageName())) {
                         int status = runningAppProcessInfo.importance;
                         if (status == android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
                                 || status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
@@ -74,9 +74,9 @@ public class CommonUtil {
      * 判断是否存在虚拟按键
      * @return
      */
-    public boolean checkDeviceHasNavigationBar(Context context) {
+    public boolean checkDeviceHasNavigationBar() {
         boolean hasNavigationBar = false;
-        Resources rs = context.getResources();
+        Resources rs = LibUtils.getContext().getResources();
         int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
         if (id > 0) {
             hasNavigationBar = rs.getBoolean(id);

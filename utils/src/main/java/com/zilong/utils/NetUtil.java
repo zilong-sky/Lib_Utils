@@ -15,8 +15,8 @@ public class NetUtil {
     /**
      * 判断网络是否连接
      */
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean isNetworkAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) LibUtils.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         // TODO: 2018/11/21  
         //需要调用者 获取  ACCESS_NETWORK_STATE权限
         NetworkInfo info = cm.getActiveNetworkInfo();
@@ -26,9 +26,9 @@ public class NetUtil {
     /**
      * 判断是否是wifi网络
      */
-    public static boolean isNetworkWifi(Context context) {
+    public static boolean isNetworkWifi() {
 
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) LibUtils.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         // TODO: 2018/11/21  
         //需要调用者 获取  ACCESS_NETWORK_STATE权限
         NetworkInfo info = cm.getActiveNetworkInfo();
