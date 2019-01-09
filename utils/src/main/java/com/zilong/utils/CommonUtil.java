@@ -12,6 +12,7 @@ import java.util.List;
  * create by zilong on 2018/7/4  10:51
  */
 public class CommonUtil {
+    private static Context mContext = LibUtils.getContext();
     private static long lastClickTime = 0;//上次点击时间
     private static long DIFF = 1000;//默认点击间隔1秒
     private static int lastButtonId = -1;//上次点击的viewid
@@ -28,7 +29,7 @@ public class CommonUtil {
     /**
      * 判断两次点击的间隔，如果小于diff，则认为是多次无效点击
      *
-     * @param diff  点击间隔,毫秒
+     * @param diff 点击间隔,毫秒
      * @return
      */
     public static boolean isFastDoubleClick(int buttonId, long diff) {
@@ -50,13 +51,12 @@ public class CommonUtil {
      */
     public static boolean isApplicationShowing() {
         boolean result = false;
-        android.app.ActivityManager am = (android.app.ActivityManager) LibUtils.getContext()
-                .getSystemService(Context.ACTIVITY_SERVICE);
+        android.app.ActivityManager am = (android.app.ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         if (am != null) {
             List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
             if (appProcesses != null) {
                 for (android.app.ActivityManager.RunningAppProcessInfo runningAppProcessInfo : appProcesses) {
-                    if (runningAppProcessInfo.processName.equals(LibUtils.getContext().getPackageName())) {
+                    if (runningAppProcessInfo.processName.equals(mContext.getPackageName())) {
                         int status = runningAppProcessInfo.importance;
                         if (status == android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
                                 || status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
@@ -72,11 +72,12 @@ public class CommonUtil {
 
     /**
      * 判断是否存在虚拟按键
+     *
      * @return
      */
     public boolean checkDeviceHasNavigationBar() {
         boolean hasNavigationBar = false;
-        Resources rs = LibUtils.getContext().getResources();
+        Resources rs = mContext.getResources();
         int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
         if (id > 0) {
             hasNavigationBar = rs.getBoolean(id);

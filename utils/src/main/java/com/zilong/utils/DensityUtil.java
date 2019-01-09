@@ -20,20 +20,23 @@ import java.lang.reflect.Method;
  * 密度相关工具类
  */
 public class DensityUtil {
+
+    private static Context mContext = LibUtils.getContext();
+
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
     public static int dp2px(float dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                LibUtils.getContext().getResources().getDisplayMetrics());
+                mContext.getResources().getDisplayMetrics());
     }
 
     /**
      * sp转化为dp
      */
-    public static int sp2px( int sp) {
+    public static int sp2px(int sp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp,
-                LibUtils.getContext().getResources().getDisplayMetrics());
+                mContext.getResources().getDisplayMetrics());
     }
 
 
@@ -41,7 +44,7 @@ public class DensityUtil {
      * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
      */
     public static float px2dp(float px) {
-        final float scale = LibUtils.getContext().getResources().getDisplayMetrics().density;
+        final float scale = mContext.getResources().getDisplayMetrics().density;
         return (px / scale + 0.5f);
     }
 
@@ -53,14 +56,14 @@ public class DensityUtil {
      * @return
      */
     public static float px2sp(Context context, float px) {
-        final float scale = LibUtils.getContext().getResources().getDisplayMetrics().scaledDensity;
+        final float scale = mContext.getResources().getDisplayMetrics().scaledDensity;
         return (px / scale + 0.5f);
     }
 
     /**
      * 根据字体大小获取字的高度
      */
-    public static int getFontHeight( int fontSize) {
+    public static int getFontHeight(int fontSize) {
         Paint paint = new Paint();
         paint.setTextSize(sp2px(fontSize));
         Paint.FontMetrics fm = paint.getFontMetrics();
@@ -74,7 +77,7 @@ public class DensityUtil {
      */
     public static int getScreenWidth() {
         DisplayMetrics dm = new DisplayMetrics();
-        WindowManager wm = (WindowManager) LibUtils.getContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(dm);
         return dm.widthPixels;
     }
@@ -84,7 +87,7 @@ public class DensityUtil {
      */
     public static int getScreenHeight() {
         DisplayMetrics dm = new DisplayMetrics();
-        WindowManager wm = (WindowManager) LibUtils.getContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(dm);
         return dm.heightPixels;
     }
@@ -97,7 +100,7 @@ public class DensityUtil {
      */
     public static int getRealContentHeight(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-        WindowManager wm = (WindowManager) LibUtils.getContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(dm);
         return dm.heightPixels - getStatusBarHeight();
     }
@@ -108,7 +111,7 @@ public class DensityUtil {
     public static int[] getWidthHeight() {
         int[] screen = new int[2];
         DisplayMetrics dm = new DisplayMetrics();
-        WindowManager wm = (WindowManager) LibUtils.getContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         if (wm != null) {
             wm.getDefaultDisplay().getMetrics(dm);
         }
@@ -123,7 +126,7 @@ public class DensityUtil {
      * <p>
      * 获取高度,不知道有啥用
      */
-    public static float getBaseY( MotionEvent e) {
+    public static float getBaseY(MotionEvent e) {
         return e.getRawY() - e.getY() - getStatusBarHeight();
     }
 
@@ -160,7 +163,7 @@ public class DensityUtil {
             obj = c.newInstance();
             field = c.getField("status_bar_height");
             x = Integer.parseInt(field.get(obj).toString());
-            statusBarHeight = LibUtils.getContext().getResources().getDimensionPixelSize(x);
+            statusBarHeight = mContext.getResources().getDimensionPixelSize(x);
         } catch (Exception e1) {
             e1.printStackTrace();
         }
@@ -173,7 +176,7 @@ public class DensityUtil {
      */
     public static boolean checkDeviceHasNavigationBar() {
         boolean hasNavigationBar = false;
-        Resources rs = LibUtils.getContext().getResources();
+        Resources rs = mContext.getResources();
         int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
         if (id > 0) {
             hasNavigationBar = rs.getBoolean(id);
@@ -200,7 +203,7 @@ public class DensityUtil {
      */
     public static int getNavigationBarHeight() {
         int navigationBarHeight = 0;
-        Resources rs = LibUtils.getContext().getResources();
+        Resources rs = mContext.getResources();
         int id = rs.getIdentifier("navigation_bar_height", "dimen", "android");
         if (id > 0 && checkDeviceHasNavigationBar()) {
             navigationBarHeight = rs.getDimensionPixelSize(id);
@@ -213,7 +216,7 @@ public class DensityUtil {
      */
     public static Point getDisplayRealSize() {
         Point point = new Point();
-        WindowManager wm = (WindowManager) LibUtils.getContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             wm.getDefaultDisplay().getRealSize(point);
             return point;

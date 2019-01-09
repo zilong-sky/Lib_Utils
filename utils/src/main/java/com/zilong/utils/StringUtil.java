@@ -48,22 +48,6 @@ public class StringUtil {
 
 
 
-    public static boolean isNotMore(String str, int length) {
-        if (str == null || str.trim().length() < length) {
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isNotMore(String str) {
-        return isNotMore(str, pswd);
-    }
-
-    public static float getCount(String text) {
-        float chineseCount = (text.getBytes().length - text.length()) / 2;
-        return chineseCount + (text.length() - chineseCount) / 2;
-    }
-
     /**
      * 判断输入的是否是数字 Pattern 正则表达式
      *

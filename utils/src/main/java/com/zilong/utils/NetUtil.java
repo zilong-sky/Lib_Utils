@@ -10,13 +10,14 @@ import android.net.NetworkInfo;
  * @date 2016/4/1 14:54.
  */
 public class NetUtil {
+    private static Context mContext = LibUtils.getContext();
 
 
     /**
      * 判断网络是否连接
      */
     public static boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager) LibUtils.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         // TODO: 2018/11/21  
         //需要调用者 获取  ACCESS_NETWORK_STATE权限
         NetworkInfo info = cm.getActiveNetworkInfo();
@@ -28,7 +29,7 @@ public class NetUtil {
      */
     public static boolean isNetworkWifi() {
 
-        ConnectivityManager cm = (ConnectivityManager) LibUtils.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         // TODO: 2018/11/21  
         //需要调用者 获取  ACCESS_NETWORK_STATE权限
         NetworkInfo info = cm.getActiveNetworkInfo();
