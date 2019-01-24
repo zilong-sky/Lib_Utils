@@ -1,5 +1,22 @@
 Lib_Utils
 
+注意事项
+==========
+使用时，如果用到工具类 applicationContext ，
+需要使用  LibUtils.init(Context context) 在app的必要的地方初始化
+# 例如：
+```java
+
+public class AppApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        LibUtils.init(this);
+    }
+}
+
+```
+
 如何导入
 ===========
 
